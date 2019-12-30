@@ -1,0 +1,17 @@
+Install docker with below two commands
+
+sudo apt-get update 
+
+sudo apt-get install docker.io
+
+change the permission/group for ubunut user by below command
+
+sudo usermod -a -G docker ubuntu
+
+Close the console and then open another one.
+
+sudo service docker restart
+
+check installation with
+
+docker run hello-world
