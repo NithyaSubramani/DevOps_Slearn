@@ -1,0 +1,69 @@
+To show the existing networks by default type
+
+$docker network ls
+
+now run a container by default parameters as
+
+$docker run -itd --name networktest ubuntu
+
+Use below commands to show the network settings of the container
+
+$docker inspect networktest
+
+$docker network inspect bridge
+
+
+remove a container from a network by using below command
+
+$docker network disconnect bridge networktest
+
+Check the network status now by using
+$docker inspect networktest
+
+Try reconnecting by using 
+$docker network connect bridge networktest
+
+Check the network again with inspect.
+
+Clean up using below commands
+$docker stop $(docker ps -aq)
+$docker rm $(docker ps -aq)
+$docker rmi $(docker images -aq)
+
+Create your own bridge network
+
+$ docker network create -d bridge my_bridge
+
+The -d flag tells Docker to use the bridge driver for the new network. 
+You could have left this flag off as bridge is the default value for this flag. 
+Go ahead and list the networks on your machine:
+
+$ docker network ls
+
+If you inspect the network, it has nothing in it.
+
+$ docker network inspect my_bridge
+
+Lets launch a centos container on our newly created network
+$docker run -itd --name centos1 --net my_bridge centos
+
+Check the network using both container and network inspect commands as below
+
+$ docker network inspect my_bridge
+
+Launch another console and from there, Similarly launch another container centos2 but this time on the default bridge network. So dont use the --net param.
+$docker run -itd --name centos2 centos
+
+Check the network settings for centos2 with docker inspect and docker network inspect
+
+Try pinging from inside centos2. It should fail
+$docker exec -it centos /bin/sh
+$ping <ip of centos1, from docker inspect centos1>
+
+Now add centos2 to my_bridge network by below command
+
+#docker network connect my_bridge centos2
+
+Try pinging now. It should work.
+
+
