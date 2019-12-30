@@ -1,0 +1,49 @@
+Install docker compose in ubuntu by using below command
+
+sudo apt-get install docker-compose
+
+Check installation with docker-compose --version
+
+docker-compose uses yml syntax to create multiple containers.
+
+Clean up the system
+
+Create a file docker-compose.yml with below content
+
+version: '3.3'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     ports:
+       - "8080:80"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
+volumes:
+    db_data:
+	
+
+Save and exit from vi. Use below command to bring up the containers.
+
+docker-compose up -d	
+
+This will bring up the containers. Make sure they are on the bridge network.
+
+Hit IP:8080 from browser, the wordpress server should be up.
+
